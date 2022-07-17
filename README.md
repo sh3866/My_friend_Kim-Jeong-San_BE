@@ -1,5 +1,7 @@
 # My_friend_Kim-Jeong-San_BE
 
+.env 파일은 만들어서 사용할 
+
 ### Start 
 ``` java
 npm run dev
