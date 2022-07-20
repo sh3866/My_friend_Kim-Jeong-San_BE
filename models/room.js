@@ -21,6 +21,10 @@ module.exports = class Room extends Sequelize.Model {
                     type: Sequelize.TIME,
                     allowNull: true,
                 },
+                group: {
+                    type: Sequelize.JSON,
+                    allowNull: true,
+                },
             },
             {
                 sequelize,
