@@ -3,7 +3,7 @@ const morgan = require("morgan");
 const path = require("path");
 const dotenv = require("dotenv");
 const cors = require("cors");
-const User = require("./models/user");
+const userRouter = require("./routes/userRoute");
 const roomRouter = require("./routes/roomRoute");
 
 dotenv.config();
@@ -27,6 +27,7 @@ app.use(cors());
 app.use(express.json()); // json 파싱
 
 app.use("/room", roomRouter);
+app.use("/user", userRouter);
 
 app.use((req, res, next) => {
     const error = new Error(`${req.method} ${req.url} 라우터가 없습니다.`);
