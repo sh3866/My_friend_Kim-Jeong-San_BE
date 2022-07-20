@@ -40,6 +40,6 @@ module.exports = class User extends Sequelize.Model {
     static associate(db) {
         db.User.hasMany(db.Friend);
         db.User.hasMany(db.Account);
-        db.User.belongsToMany(db.Room, { through: "userRoom" });
+        db.User.belongsToMany(db.Room, { through: db.UserRoom });
     }
 };

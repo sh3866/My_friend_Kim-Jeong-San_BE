@@ -7,6 +7,7 @@ const Friend = require("./friend");
 const Payment = require("./payment");
 const Room = require("./room");
 const Receipt = require("./receipt");
+const UserRoom = require("./userRoom");
 
 const db = {};
 const sequelize = new Sequelize(
@@ -25,6 +26,7 @@ db.Friend = Friend;
 db.Payment = Payment;
 db.Room = Room;
 db.Receipt = Receipt;
+db.UserRoom = UserRoom;
 
 User.init(sequelize);
 Account.init(sequelize);
@@ -32,6 +34,7 @@ Friend.init(sequelize);
 Payment.init(sequelize);
 Room.init(sequelize);
 Receipt.init(sequelize);
+UserRoom.init(sequelize);
 
 User.associate(db);
 Account.associate(db);
