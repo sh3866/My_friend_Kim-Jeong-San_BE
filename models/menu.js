@@ -1,25 +1,29 @@
-const { INTEGER } = require("sequelize");
 const Sequelize = require("sequelize");
+const { INTEGER } = require("sequelize");
 
-module.exports = class Friend extends Sequelize.Model {
+module.exports = class Menu extends Sequelize.Model {
     static init(sequelize) {
         return super.init(
             {
-                friendId: {
-                    type: INTEGER,
-                    allowNull: false,
-                },
                 name: {
                     type: Sequelize.STRING(30),
                     allowNull: false,
+                },
+                amount: {
+                    type: INTEGER,
+                    allowNull: false,
+                },
+                group: {
+                    type: Sequelize.JSON,
+                    allowNull: true,
                 },
             },
             {
                 sequelize,
                 timestamps: true,
                 underscored: false,
-                modelName: "Friend",
-                tableName: "friends",
+                modelName: "Menu",
+                tableName: "menus",
                 paranoid: true,
                 charset: "utf8mb4",
                 collate: "utf8mb4_general_ci",
@@ -27,6 +31,6 @@ module.exports = class Friend extends Sequelize.Model {
         );
     }
     static associate(db) {
-        db.Friend.belongsTo(db.User);
+        db.Menu.belongsTo(db.Receipt);
     }
 };

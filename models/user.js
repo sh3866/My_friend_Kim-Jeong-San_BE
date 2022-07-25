@@ -12,14 +12,11 @@ module.exports = class User extends Sequelize.Model {
                     type: Sequelize.STRING(30),
                     allowNull: false,
                 },
-                password: {
-                    type: Sequelize.STRING(100),
+                accounts: {
+                    type: Sequelize.JSON,
                     allowNull: false,
                 },
-                phoneNumber: {
-                    type: Sequelize.STRING(30),
-                    allowNull: true,
-                },
+
                 profilePhoto: {
                     type: Sequelize.STRING(100),
                     allowNull: true,
@@ -38,8 +35,6 @@ module.exports = class User extends Sequelize.Model {
         );
     }
     static associate(db) {
-        db.User.hasMany(db.Friend);
-        db.User.hasMany(db.Account);
-        db.User.belongsToMany(db.Room, { through: "userRoom" });
+        db.User.belongsToMany(db.Room, { through: db.UserRoom });
     }
 };

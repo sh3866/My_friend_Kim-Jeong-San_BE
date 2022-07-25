@@ -21,6 +21,10 @@ module.exports = class Room extends Sequelize.Model {
                     type: Sequelize.TIME,
                     allowNull: true,
                 },
+                group: {
+                    type: Sequelize.JSON,
+                    allowNull: true,
+                },
             },
             {
                 sequelize,
@@ -35,7 +39,7 @@ module.exports = class Room extends Sequelize.Model {
         );
     }
     static associate(db) {
-        db.Room.belongsToMany(db.User, { through: "userRoom" });
-        db.Room.hasMany(db.Receipt);
+        db.Room.belongsToMany(db.User, { through: db.UserRoom });
+        db.Room.hasMany(db.Payment);
     }
 };
