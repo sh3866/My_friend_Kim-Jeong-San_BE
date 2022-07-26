@@ -8,7 +8,6 @@ const Room = require("./room");
 const Receipt = require("./receipt");
 const AccountBook = require("./accountBook");
 const Menu = require("./menu");
-const userRoom = require("./userRoom");
 const UserRoom = require("./userRoom");
 
 const db = {};
