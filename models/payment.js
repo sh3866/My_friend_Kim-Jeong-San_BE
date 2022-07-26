@@ -17,10 +17,6 @@ module.exports = class Payemnt extends Sequelize.Model {
                     type: INTEGER,
                     allowNull: false,
                 },
-                number: {
-                    type: INTEGER,
-                    allowNull: true,
-                },
                 group: {
                     type: Sequelize.JSON,
                     allowNull: true,
@@ -39,6 +35,6 @@ module.exports = class Payemnt extends Sequelize.Model {
         );
     }
     static associate(db) {
-        db.Payment.belongsTo(db.Receipt);
+        db.Payment.belongsTo(db.Room);
     }
 };

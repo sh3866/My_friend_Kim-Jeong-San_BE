@@ -3,10 +3,11 @@ const env = process.env.NODE_ENV || "development";
 const config = require("../config/config")[env];
 const User = require("./user");
 const Account = require("./account");
-const Friend = require("./friend");
 const Payment = require("./payment");
 const Room = require("./room");
 const Receipt = require("./receipt");
+const AccountBook = require("./accountBook");
+const Menu = require("./menu");
 const UserRoom = require("./userRoom");
 
 const db = {};
@@ -22,25 +23,27 @@ db.sequelize = sequelize;
 //아래 추가
 db.User = User;
 db.Account = Account;
-db.Friend = Friend;
 db.Payment = Payment;
 db.Room = Room;
 db.Receipt = Receipt;
+db.Menu = Menu;
+db.AccountBook = AccountBook;
 db.UserRoom = UserRoom;
 
 User.init(sequelize);
 Account.init(sequelize);
-Friend.init(sequelize);
 Payment.init(sequelize);
 Room.init(sequelize);
 Receipt.init(sequelize);
+AccountBook.init(sequelize);
+Menu.init(sequelize);
 UserRoom.init(sequelize);
 
 User.associate(db);
 Account.associate(db);
-Friend.associate(db);
 Room.associate(db);
 Receipt.associate(db);
 Payment.associate(db);
+Menu.associate(db);
 
 module.exports = db;
