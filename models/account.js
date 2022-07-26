@@ -4,6 +4,14 @@ module.exports = class Account extends Sequelize.Model {
     static init(sequelize) {
         return super.init(
             {
+                name: {
+                    type: Sequelize.STRING(20),
+                    allowNull: false,
+                },
+                userId: {
+                    type: Sequelize.INTEGER,
+                    allowNull: true,
+                },
                 bank: {
                     type: Sequelize.STRING(20),
                     allowNull: false,
@@ -25,7 +33,5 @@ module.exports = class Account extends Sequelize.Model {
             }
         );
     }
-    static associate(db) {
-        db.Account.belongsTo(db.User);
-    }
+    static associate(db) {}
 };

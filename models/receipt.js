@@ -9,6 +9,27 @@ module.exports = class Receipt extends Sequelize.Model {
                     type: Sequelize.DATE,
                     allowNull: false,
                 },
+                amount: {
+                    type: INTEGER,
+                    allowNull: false,
+                },
+                menus: {
+                    type: Sequelize.JSON,
+                    allowNull: false,
+                },
+                payerId: {
+                    type: INTEGER,
+                    allowNull: false,
+                },
+                receiptPhoto: {
+                    type: Sequelize.STRING(200),
+                    allowNull: false,
+                },
+                isEnd: {
+                    type: Sequelize.BOOLEAN,
+                    allowNull: false,
+                    defaultValue: false,
+                },
             },
             {
                 sequelize,
@@ -24,5 +45,6 @@ module.exports = class Receipt extends Sequelize.Model {
     }
     static associate(db) {
         db.Receipt.belongsTo(db.Room);
+        db.Receipt.hasMany(db.Menu);
     }
 };
