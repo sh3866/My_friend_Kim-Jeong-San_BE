@@ -1,5 +1,6 @@
 const Sequelize = require("../models/index");
 const userService = require("./userService");
+const UserDto = require("../dto/UserDto");
 
 module.exports = {
     createRoom: async function (req, transaction) {
@@ -57,5 +58,18 @@ module.exports = {
                 );
             }
         }
+    },
+
+    getGroupById: async function (id) {
+        const room = await this.findRoomById(id);
+        if (room === null) throw Error("모임방을 찾을 수 없습니다.");
+        let users = [];
+        for (const userId of room.dataValues.group) {
+            console.log(userId);
+            await Sequelize.User.findByPk(userId).then((user) => {
+                if (user !== null) users.push(new UserDto(user));
+            });
+        }
+        return users;
     },
 };

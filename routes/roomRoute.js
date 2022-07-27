@@ -5,5 +5,6 @@ const router = express.Router();
 router.post("/", roomController.createRoom);
 router.get("/", roomController.getRooms);
 router.put("/:roomId", roomController.updateGroup);
+router.get("/:roomId/group", roomController.getGroup);
 
 module.exports = router;

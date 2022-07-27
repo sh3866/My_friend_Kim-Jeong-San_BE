@@ -14,7 +14,7 @@ module.exports = {
             await roomService.createRoom(req, transaction);
 
             await transaction.commit();
-            res.status(200).send(new ResponseDto(200, "모임방 생성 완료"));
+            res.status(200).send(new ResponseDto(200, "모임방 생성 성공"));
         } catch (err) {
             await transaction?.rollback();
             console.log(err);
@@ -74,7 +74,7 @@ module.exports = {
                 req.query.userId
             );
             await transaction.commit();
-            res.status(200).send(new ResponseDto(200, "모임방 나가기 완료"));
+            res.status(200).send(new ResponseDto(200, "모임방 나가기 성공"));
         } catch (err) {
             await transaction?.rollback();
             console.log(err);
@@ -82,6 +82,23 @@ module.exports = {
                 new ResponseDto(
                     err.message ? 400 : 500,
                     err.message ? err.message : "모임방 나가기 실패"
+                )
+            );
+        }
+    },
+    getGroup: async function (req, res) {
+        try {
+            const roomId = req.params.roomId;
+            const group = await roomService.getGroupById(roomId);
+            res.status(200).send(
+                new ResponseDto(200, "모임방 그룹원 조회 성공", group)
+            );
+        } catch (err) {
+            console.log(err);
+            res.status(500).send(
+                new ResponseDto(
+                    err.message ? 400 : 500,
+                    err.message ? err.message : "모임방 그룹원 조회 실패"
                 )
             );
         }
