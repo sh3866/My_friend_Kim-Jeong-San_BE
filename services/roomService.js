@@ -19,10 +19,16 @@ module.exports = {
         if (group)
             group.forEach((userId) => {
                 userService.findUserById(userId).then((user) => {
-                    if (user) room.addUser(user.id);
+                    if (user) room.addUser(user.id, { paranoid: false });
                 });
             });
     },
+    findRoomById: async function (roomId) {
+        return await Sequelize.Room.findOne({
+            where: { id: roomId },
+        });
+    },
+
     deleteRoomById: async function (id, transaction) {
         return await Sequelize.Room.destroy(
             { where: { id: id } },
