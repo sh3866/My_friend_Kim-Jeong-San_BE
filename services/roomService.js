@@ -72,4 +72,35 @@ module.exports = {
         }
         return users;
     },
+
+    groupByDate: function (rooms) {
+        const grouped = rooms.reduce((group, room) => {
+            const { startDate } = room;
+            group[startDate] = group[startDate] ?? [];
+            group[startDate].push(room);
+            return group;
+        }, {});
+        const sortedByDay = Object.keys(grouped)
+            .sort()
+            .reduce((r, k) => ((r[k] = grouped[k]), r), {});
+
+        return sortedByDay;
+    },
+
+    getRoomByDate: function (list, date) {
+        for (const [key, value] of Object.entries(list)) {
+            if (key === date) {
+                return value;
+            }
+        }
+        return null;
+    },
+
+    getRoomByMonth: function (list, yyyymm) {
+        const result = {};
+        for (const [key, value] of Object.entries(list)) {
+            if (key.toString().includes(yyyymm)) result[key] = value;
+        }
+        return Object.keys(result).length === 0 ? null : result;
+    },
 };

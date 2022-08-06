@@ -8,7 +8,6 @@ const roomRouter = require("./routes/roomRoute");
 
 dotenv.config();
 const { sequelize } = require("./models");
-const db = require("./models");
 
 const app = express();
 app.set("port", process.env.PORT || 8001);

@@ -7,4 +7,6 @@ router.get("/", roomController.getRooms);
 router.put("/:roomId", roomController.updateGroup);
 router.get("/:roomId/group", roomController.getGroup);
 
+router.get("/schedule", roomController.getSchedule);
+
 module.exports = router;

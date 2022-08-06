@@ -41,8 +41,4 @@ module.exports = class Room extends Sequelize.Model {
     static associate(db) {
         db.Room.hasMany(db.Payment);
     }
-
-    get name() {
-        return this.name;
-    }
 };

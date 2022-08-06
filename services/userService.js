@@ -1,7 +1,6 @@
 const db = require("../models/index");
 const { Room, User, UserRoom } = require("../models/index");
 const Sequelize = require("../models/index");
-const Payemnt = require("../models/payment");
 const paymentService = require("./paymentService");
 const RoomDto = require("../dto/RoomDto");
 
@@ -43,7 +42,14 @@ module.exports = {
         const result = await User.findAll({
             include: {
                 model: Room,
-                attributes: ["id", "name", "color", "startDate", "group"],
+                attributes: [
+                    "id",
+                    "name",
+                    "color",
+                    "startDate",
+                    "startTime",
+                    "group",
+                ],
             },
             where: { id: id },
         }).then((it) => {

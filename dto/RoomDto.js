@@ -6,6 +6,7 @@ module.exports = class RoomDto {
     name;
     color;
     startDate;
+    startTime;
     group = [];
     userList = [];
 
@@ -14,11 +15,16 @@ module.exports = class RoomDto {
         this.name = room.dataValues.name;
         this.color = room.dataValues.color;
         this.startDate = room.dataValues.startDate;
+        this.startTime = room.dataValues.startTime;
         this.group = room.dataValues.group;
     }
 
     addUser(user) {
         this.userList.push(new UserDto(user));
+    }
+
+    addUserList(list) {
+        this.userList = list;
     }
 
     get() {
@@ -27,6 +33,7 @@ module.exports = class RoomDto {
             name: this.name,
             color: this.color,
             startDate: this.startDate,
+            startTime: this.startTime,
             userList: this.userList,
         };
     }
