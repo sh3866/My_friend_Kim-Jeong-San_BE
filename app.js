@@ -5,6 +5,7 @@ const dotenv = require("dotenv");
 const cors = require("cors");
 const userRouter = require("./routes/userRoute");
 const roomRouter = require("./routes/roomRoute");
+const paymentRouter = require("./routes/paymentRoute")
 
 dotenv.config();
 const { sequelize } = require("./models");
@@ -27,6 +28,7 @@ app.use(express.json()); // json 파싱
 
 app.use("/room", roomRouter);
 app.use("/user", userRouter);
+app.use("/payment", paymentRouter);
 
 app.use((req, res, next) => {
     const error = new Error(`${req.method} ${req.url} 라우터가 없습니다.`);
