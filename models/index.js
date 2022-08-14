@@ -45,5 +45,6 @@ Room.associate(db);
 Receipt.associate(db);
 Payment.associate(db);
 Menu.associate(db);
+UserRoom.associate(db);
 
 module.exports = db;

@@ -39,7 +39,6 @@ module.exports = class Room extends Sequelize.Model {
         );
     }
     static associate(db) {
-        db.Room.belongsToMany(db.User, { through: db.UserRoom });
         db.Room.hasMany(db.Payment);
     }
 };
