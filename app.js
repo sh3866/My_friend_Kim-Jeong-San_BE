@@ -6,7 +6,9 @@ const cors = require("cors");
 const userRouter = require("./routes/userRoute");
 const roomRouter = require("./routes/roomRoute");
 const paymentRouter = require("./routes/paymentRoute");
-const loginRouter = require("./routes/login");
+const loginRouter = require("./routes/loginRoute");
+const registerRouter = require("./routes/registerRoute");
+const db = require("./config/db");
 
 const bodyParser = require("body-parser");
 const nunjucks = require('nunjucks');
@@ -16,6 +18,7 @@ const session = require('express-session');
 
 dotenv.config();
 const { sequelize } = require("./models");
+const { connect } = require("./config/db");
 
 const app = express();
 app.set("port", process.env.PORT || 3000);
@@ -28,6 +31,8 @@ sequelize
     .catch((err) => {
         console.error(err);
     });
+
+
 
 nunjucks.configure('views', {
     express: app,
@@ -51,6 +56,7 @@ app.use(session({
     saveUninitialized:false,
 }));
 
+// app.use("/", loginRouter);
 
 app.get('/auth/kakao', (req, res) => {
     const kakaoAuthURL = `https://kauth.kakao.com/oauth/authorize?client_id=${kakao.clientID}&redirect_uri=${kakao.redirectUri}&response_type=code&scope=profile_nickname,profile_image,account_email`;
@@ -78,8 +84,6 @@ app.get('/auth/kakao/callback', async (req, res) => {
         res.json(err.data)
     }
 
-
-
     let user;
     try{
         user = await axios({
@@ -92,7 +96,21 @@ app.get('/auth/kakao/callback', async (req, res) => {
     }catch(err){
         res.json(err.data);
     }
-    console.log(user);
+    //console.log(user);
+
+    var psword = user.data.id;
+    var id = user.data.properties.nickname;
+
+    const query = "INSERT INTO users(id, psword) VALUES(?, ?);";
+
+    db.query(query, [id, psword], function(err, rows, fields) {
+        if(err)
+          console.log(err);
+        else {
+          console.log(rows);
+          res.send('회원가입이 완료되었습니다.');
+        }
+    })
 
 
 
@@ -102,15 +120,18 @@ app.get('/auth/kakao/callback', async (req, res) => {
 
 });
 
-
-
-
 app.get('/auth/info',(req,res)=>{
     let {nickname,profile_image} = req.session.kakao.properties
     res.render('info.html',{
         nickname,profile_image
     });
-})
+});
+
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended: true}));
+app.use("/register", registerRouter);
+
+
 
 
 app.use(morgan("dev"));
