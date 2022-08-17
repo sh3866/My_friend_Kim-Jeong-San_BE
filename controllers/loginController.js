@@ -3,11 +3,11 @@ const nunjucks = require('nunjucks');
 const axios = require('axios');
 const qs = require('qs');
 const session = require('express-session');
-const db = require("../config/db")
+const db = require("../config/db");
 
-const kakao={
-    clientID : '187dfbd8517a2fdb721af0f630552827',
-    clientSecret : '08NwRRAOnO5kKs8pCdYsU953VMna3A3T',
+const kakao = {
+    clientID: '187dfbd8517a2fdb721af0f630552827',
+    clientSecret: '08NwRRAOnO5kKs8pCdYsU953VMna3A3T',
     redirectUri: 'http://localhost:3000/auth/kakao/callback'
 }
 
@@ -36,33 +36,33 @@ module.exports = {
         } catch (err) {
             res.json(err.data)
         }
-    
+
         let user;
-        try{
+        try {
             user = await axios({
-                method:"GET",
-                url:'https://kapi.kakao.com/v2/user/me',
-                headers:{
-                    Authorization:`Bearer ${token.data.access_token}`
+                method: "GET",
+                url: 'https://kapi.kakao.com/v2/user/me',
+                headers: {
+                    Authorization: `Bearer ${token.data.access_token}`
                 }
             })
-        }catch(err){
+        } catch (err) {
             res.json(err.data);
         }
         console.log(user);
-    
+
         var id = user.data.id;
         var user_name = user.data.prop.nickname;
-    
-    
+
+
         const query = "INSERT INTO users(id, psword) VALUES(?, ?);";
 
-        db.query(query, [id, psword], function(err, rows, fields) {
-            if(err)
-            console.log(err);
+        db.query(query, [id, psword], function (err, rows, fields) {
+            if (err)
+                console.log(err);
             else {
-            console.log(rows);
-            res.send('회원가입이 완료되었습니다.');
+                console.log(rows);
+                res.send('회원가입이 완료되었습니다.');
             }
         })
 
@@ -70,13 +70,29 @@ module.exports = {
 
         res.redirect('/');
     },
-    getinfo: (req,res) => {
-        let {nickname,profile_image} = req.session.kakao.properties
-        res.render('info.html',{
-            nickname,profile_image
+    getinfo: (req, res) => {
+        let { nickname, profile_image } = req.session.kakao.properties
+        res.render('info.html', {
+            nickname, profile_image
         });
     },
-    getpage: (req,res)=>{
+    getpage: (req, res) => {
         res.render('index.html');
-    }
+    },
+    getKakaoUser: function (req, res) {
+        var id = req.body.id;
+        var name = req.body.nickname;
+        var email = req.body.email;
+
+        const query = "INSERT INTO users(id, name, email) VALUES(?, ?, ?);";
+
+        db.query(query, [id, name, email], function (err, rows, fields) {
+            if (err)
+                console.log(err);
+            else {
+                console.log(rows);
+                res.send('회원가입이 완료되었습니다.');
+            }
+        });
+    },
 }
