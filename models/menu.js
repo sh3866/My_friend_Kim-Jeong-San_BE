@@ -5,7 +5,12 @@ const { Poll } = require(".");
 module.exports = class Menu extends Sequelize.Model {
     static init(sequelize) {
         return super.init(
-            {},
+            {
+                poll_id: {
+                    type: Sequelize.STRING(200),
+                    allowNull: false,
+                },
+            },
             {
                 sequelize,
                 timestamps: true,
@@ -18,8 +23,5 @@ module.exports = class Menu extends Sequelize.Model {
             }
         );
     }
-    static associate(db) {
-        db.Menu.hasOne(db.Poll);
-        db.Poll.belongsTo(db.Menu);
-    }
+    static associate(db) {}
 };
