@@ -9,8 +9,8 @@ module.exports = class Vote extends Sequelize.Model {
                     type: INTEGER,
                     allowNull: false,
                 },
-                item_id: {
-                    type: INTEGER,
+                items: {
+                    type: Sequelize.STRING(1000),
                     allowNull: false,
                 },
             },
