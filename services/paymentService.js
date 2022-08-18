@@ -30,4 +30,27 @@ module.exports = {
         }
         return result;
     },
+    createVote: async function (req, transaction) {
+        const items = req.body.items;
+        await Sequelize.Vote.create(
+            {
+                PollId: req.body.poll,
+                MenuId: req.body.menu,
+                items: req.body.items,
+                user_id: req.body.user,
+            },
+            { transaction: transaction }
+        );
+        // for (i in items) {
+        //     await Sequelize.Vote.create(
+        //         {
+        //             PollId: req.body.poll,
+        //             MenuId: req.body.menu,
+        //             item_id: i,
+        //             user_id: req.body.user,
+        //         },
+        //         { transaction: transaction }
+        //     );
+        // }
+    },
 };

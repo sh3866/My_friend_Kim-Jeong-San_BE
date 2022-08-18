@@ -4,7 +4,12 @@ const Sequelize = require("sequelize");
 module.exports = class Poll extends Sequelize.Model {
     static init(sequelize) {
         return super.init(
-            {},
+            {
+                menu_id: {
+                    type: Sequelize.STRING(200),
+                    allowNull: false,
+                },
+            },
             {
                 sequelize,
                 timestamps: true, // create at 에 자동 설정
@@ -20,7 +25,5 @@ module.exports = class Poll extends Sequelize.Model {
     static associate(db) {
         db.Poll.belongsTo(db.Receipt);
         db.Poll.belongsTo(db.User);
-        db.Poll.hasOne(db.Menu);
-        db.Menu.belongsTo(db.Poll);
     }
 };

@@ -37,4 +37,16 @@ module.exports = {
             res.status(400).send(new ResponseDto(400, "정산 내역 조회 실패"));
         }
     },
+    doVote: async function (req, res) {
+        let transaction = await sequelize.transaction();
+        try {
+            await paymentService.createVote(req, transaction);
+            await transaction.commit();
+            res.status(200).send({ statusCode: 200, res: "투표 성공" });
+        } catch (err) {
+            await transaction.rollback();
+            console.log(err);
+            res.status(400).send({ statusCode: 400, res: "투표 실패" });
+        }
+    },
 };
