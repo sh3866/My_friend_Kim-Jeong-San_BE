@@ -1,17 +1,16 @@
-const Sequelize = require("sequelize");
 const { INTEGER } = require("sequelize");
-const { Poll } = require(".");
+const Sequelize = require("sequelize");
 
-module.exports = class Menu extends Sequelize.Model {
+module.exports = class Poll extends Sequelize.Model {
     static init(sequelize) {
         return super.init(
             {},
             {
                 sequelize,
-                timestamps: true,
+                timestamps: true, // create at 에 자동 설정
                 underscored: false,
-                modelName: "Menu",
-                tableName: "menus",
+                modelName: "Poll",
+                tableName: "polls",
                 paranoid: true,
                 charset: "utf8mb4",
                 collate: "utf8mb4_general_ci",
@@ -19,7 +18,9 @@ module.exports = class Menu extends Sequelize.Model {
         );
     }
     static associate(db) {
-        db.Menu.hasOne(db.Poll);
-        db.Poll.belongsTo(db.Menu);
+        db.Poll.belongsTo(db.Receipt);
+        db.Poll.belongsTo(db.User);
+        db.Poll.hasOne(db.Menu);
+        db.Menu.belongsTo(db.Poll);
     }
 };
