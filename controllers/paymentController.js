@@ -65,7 +65,7 @@ module.exports = {
         try {
             const roomId = req.params.roomId;
             const paymentList = await paymentService.findPaymentList(roomId);
-            result = {};
+            const result = {};
             for (i = 0; i < paymentList.length; i++) {
                 p = paymentList[i];
                 let amount = p.amount / p.group.length;
@@ -96,11 +96,65 @@ module.exports = {
                     }
                 }
             }
+
+            const menuIdList = await paymentService.findMenuList(roomId);
+            const voteResult = {};
+
+            for (let m of menuIdList) {
+                let itemIdList = await paymentService.findItemList(m);
+                let pollId = await paymentService.findPollIdByMenu(m);
+                voteResult[`${m}`] = await paymentService.findVoteList(
+                    pollId,
+                    itemIdList
+                );
+            }
+
+            console.log(voteResult);
+            for (let m in voteResult) {
+                // m은 메뉴 아이디
+                for (let i in voteResult[`${m}`]) {
+                    // i는 아이템 아이디
+                    for (let u of voteResult[`${m}`][`${i}`]) {
+                        // u는 i에 투표한 유저
+                        let payer = await paymentService.findReceiptPayerId(m);
+                        let amount =
+                            (await paymentService.findItemSum(i)) /
+                            voteResult[`${m}`][`${i}`].length;
+                        if (payer != u) {
+                            if (payer < u) {
+                                payer = await paymentService.findUserName(
+                                    payer
+                                );
+                                u = await paymentService.findUserName(u);
+
+                                if (`${payer} -> ${u}` in result) {
+                                    result[`${payer} -> ${u}`] -= amount;
+                                } else {
+                                    result[`${payer} -> ${u}`] = amount * -1;
+                                }
+                            } else {
+                                payer = await paymentService.findUserName(
+                                    payer
+                                );
+                                u = await paymentService.findUserName(u);
+
+                                if (`${u} -> ${payer}` in result) {
+                                    result[`${u} -> ${payer}`] += amount;
+                                } else {
+                                    result[`${u} -> ${payer}`] = amount;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
             for (let key in result) {
                 if (result[key] < 0) {
                     let userName = key.split(" -> ");
                     result[`${userName[1]} -> ${userName[0]}`] =
                         result[key] * -1;
+                    delete result[key];
+                } else if (result[key] == 0) {
                     delete result[key];
                 }
             }
