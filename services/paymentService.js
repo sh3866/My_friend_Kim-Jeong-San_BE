@@ -53,4 +53,18 @@ module.exports = {
         //     );
         // }
     },
+    updateVote: async function (req, transaction) {
+        const items = req.body.items;
+        await Sequelize.Vote.update(
+            { items: req.body.items },
+            {
+                where: {
+                    PollId: req.body.poll,
+                    MenuId: req.body.menu,
+                    user_id: req.body.user,
+                },
+            },
+            { transaction: transaction }
+        );
+    },
 };
