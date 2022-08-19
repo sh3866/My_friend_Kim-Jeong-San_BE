@@ -61,4 +61,55 @@ module.exports = {
             res.status(400).send({ statusCode: 400, res: "다시 투표 실패" });
         }
     },
+    getPaymentResult: async function (req, res) {
+        try {
+            const roomId = req.params.roomId;
+            const paymentList = await paymentService.findPaymentList(roomId);
+            result = {};
+            for (i = 0; i < paymentList.length; i++) {
+                p = paymentList[i];
+                let amount = p.amount / p.group.length;
+                for (j = 0; j < p.group.length; j++) {
+                    let payer = p.payerId;
+                    let u = p.group[j];
+
+                    if (p.payerId != u) {
+                        if (p.payerId < u) {
+                            payer = await paymentService.findUserName(payer);
+                            u = await paymentService.findUserName(u);
+
+                            if (`${payer} -> ${u}` in result) {
+                                result[`${payer} -> ${u}`] -= amount;
+                            } else {
+                                result[`${payer} -> ${u}`] = amount * -1;
+                            }
+                        } else {
+                            payer = await paymentService.findUserName(payer);
+                            u = await paymentService.findUserName(u);
+
+                            if (`${u} -> ${payer}` in result) {
+                                result[`${u} -> ${payer}`] += amount;
+                            } else {
+                                result[`${u} -> ${payer}`] = amount;
+                            }
+                        }
+                    }
+                }
+            }
+            for (let key in result) {
+                if (result[key] < 0) {
+                    let userName = key.split(" -> ");
+                    result[`${userName[1]} -> ${userName[0]}`] =
+                        result[key] * -1;
+                    delete result[key];
+                }
+            }
+            res.status(200).send(
+                new ResponseDto(200, "정산 결과 조회 성공", result)
+            );
+        } catch (err) {
+            console.log(err);
+            res.status(400).send(new ResponseDto(400, "정산 결과 조회 실패"));
+        }
+    },
 };

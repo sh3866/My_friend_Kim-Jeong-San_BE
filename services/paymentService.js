@@ -67,4 +67,28 @@ module.exports = {
             { transaction: transaction }
         );
     },
+    findPaymentList: async function (roomId) {
+        const nPayments = await Sequelize.Payment.findAll({
+            attributes: ["amount", "payerId", "group"],
+            where: { RoomId: roomId },
+        });
+        const result = [];
+        for (i = 0; i < nPayments.length; i++) {
+            p = nPayments[i];
+            await Sequelize.User.findByPk(p.payerId).then((user) => {
+                result.push({
+                    payerId: p.dataValues.payerId,
+                    payerName: user.dataValues.name,
+                    amount: p.dataValues.amount,
+                    group: p.dataValues.group,
+                });
+            });
+        }
+        return result;
+    },
+    findUserName: async function (userId) {
+        const user = await Sequelize.User.findByPk(userId);
+        const result = user.dataValues.name;
+        return result;
+    },
 };
