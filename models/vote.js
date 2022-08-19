@@ -10,7 +10,7 @@ module.exports = class Vote extends Sequelize.Model {
                     allowNull: false,
                 },
                 items: {
-                    type: Sequelize.STRING(1000),
+                    type: Sequelize.JSON,
                     allowNull: false,
                 },
             },
