@@ -10,7 +10,7 @@ module.exports = class Payemnt extends Sequelize.Model {
                     allowNull: false,
                 },
                 date: {
-                    type: Sequelize.DATE,
+                    type: Sequelize.DATEONLY,
                     allowNull: true,
                 },
                 payerId: {
