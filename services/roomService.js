@@ -80,11 +80,8 @@ module.exports = {
             group[startDate].push(room);
             return group;
         }, {});
-        const sortedByDay = Object.keys(grouped)
-            .sort()
-            .reduce((r, k) => ((r[k] = grouped[k]), r), {});
 
-        return sortedByDay;
+        return grouped;
     },
 
     getRoomByDate: function (list, date) {
@@ -97,10 +94,10 @@ module.exports = {
     },
 
     getRoomByMonth: function (list, yyyymm) {
-        const result = {};
+        const result = [];
         for (const [key, value] of Object.entries(list)) {
-            if (key.toString().includes(yyyymm)) result[key] = value;
+            if (key.toString().includes(yyyymm)) result.push(...value);
         }
-        return Object.keys(result).length === 0 ? null : result;
+        return result.length === 0 ? null : result;
     },
 };
