@@ -20,9 +20,12 @@ module.exports = {
         for (i = 0; i < payments.length; i++) {
             p = payments[i];
             await Sequelize.User.findByPk(p.payerId).then((user) => {
+                let date = p.dataValues.date;
+                date = date.slice(5);
+                date = date.replace("-", "/");
                 result.push({
                     payerName: user.dataValues.name,
-                    date: p.dataValues.date,
+                    date: date,
                     amount: p.dataValues.amount,
                     num: i + 1,
                 });
