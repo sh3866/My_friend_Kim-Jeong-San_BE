@@ -29,9 +29,19 @@ module.exports = {
             const paymentListResult = await paymentService.findRoomPayments(
                 roomId
             );
-            res.status(200).send(
-                new ResponseDto(200, "정산 내역 조회 성공", paymentListResult)
-            );
+            if (paymentListResult.length == 0) {
+                res.status(200).send(
+                    new ResponseDto(204, "정산 내역 조회 성공")
+                );
+            } else {
+                res.status(200).send(
+                    new ResponseDto(
+                        200,
+                        "정산 내역 조회 성공",
+                        paymentListResult
+                    )
+                );
+            }
         } catch (err) {
             console.log(err);
             res.status(400).send(new ResponseDto(400, "정산 내역 조회 실패"));
