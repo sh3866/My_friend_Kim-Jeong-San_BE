@@ -10,7 +10,9 @@ router.get("/register", function(req, res){
     res.render('register');
 });
 
-router.post('/:id/register', registerController.getAccount);
+router.post('/:userId/register', registerController.getAccount);
+
+router.get('/:userId/register', registerController.getProfile);
 
 router.post('/login', loginController.getKakaoUser);
 

@@ -1,12 +1,12 @@
-const { INTEGER } = require("sequelize");
-const Sequelize = require("sequelize");
+const { INTEGER } = require('sequelize');
+const Sequelize = require('sequelize');
 
 module.exports = class Poll extends Sequelize.Model {
     static init(sequelize) {
         return super.init(
             {
                 menu_id: {
-                    type: Sequelize.STRING(200),
+                    type: INTEGER,
                     allowNull: false,
                 },
             },
@@ -14,11 +14,11 @@ module.exports = class Poll extends Sequelize.Model {
                 sequelize,
                 timestamps: true, // create at 에 자동 설정
                 underscored: false,
-                modelName: "Poll",
-                tableName: "polls",
+                modelName: 'Poll',
+                tableName: 'polls',
                 paranoid: true,
-                charset: "utf8mb4",
-                collate: "utf8mb4_general_ci",
+                charset: 'utf8mb4',
+                collate: 'utf8mb4_general_ci',
             }
         );
     }

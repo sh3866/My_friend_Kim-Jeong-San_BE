@@ -39,7 +39,7 @@ app.use(cors());
 app.use(express.json()); // json 파싱
 
 app.use("/room", roomRouter);
-app.use("/user", userRouter);
+// app.use("/user", userRouter);
 app.use("/payment", paymentRouter);
 
 app.use((req, res, next) => {

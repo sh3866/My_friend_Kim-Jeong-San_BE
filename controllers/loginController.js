@@ -1,9 +1,5 @@
-const bodyParser = require("body-parser");
-const nunjucks = require('nunjucks');
-const axios = require('axios');
-const qs = require('qs');
-const session = require('express-session');
-const db = require("../config/db");
+const { sequelize, User, Room } = require("../models/index");
+const ResponseDto = require("../dto/ResponseDto");
 
 const kakao = {
     clientID: '187dfbd8517a2fdb721af0f630552827',
@@ -12,87 +8,25 @@ const kakao = {
 }
 
 module.exports = {
-    getKakaoLogin: (req, res) => {
-        const kakaoAuthURL = `https://kauth.kakao.com/oauth/authorize?client_id=${kakao.clientID}&redirect_uri=${kakao.redirectUri}&response_type=code&scope=profile,account_email`;
-        res.redirect(kakaoAuthURL);
-    },
-    loginProcess: async (req, res) => {
-        let token;
-        try {
-            token = await axios({
-                method: 'POST',
-                url: 'https://kauth.kakao.com/oauth/token',
-                headers: {
-                    'content-type': 'application/x-www-form-urlencoded'
-                },
-                data: qs.stringify({
-                    grant_type: 'authorization_code',
-                    client_id: kakao.clientID,
-                    client_secret: kakao.clientSecret,
-                    redirectUri: kakao.redirectUri,
-                    code: req.query.code,
-                })
-            })
-        } catch (err) {
-            res.json(err.data)
+    getKakaoUser: async(req, res) => {
+        try{
+            console.log(req.body);
+            const registerUser = await User.findOne({
+                where: { id: req.body.userId }
+            });
+            if (registerUser === null) {
+                const newUser = await User.create({
+                    id: req.body.userId,
+                    name: req.body.name,
+                    email: req.body.email,
+                    profilePhoto: req.body.profilePhoto,
+                });
+                res.status(201).send(new ResponseDto(201, "최초 로그인 성공, 계좌등록 필요"));
+            };
+            res.status(200).send(new ResponseDto(200, "로그인 성공"));
+        } catch(err) {
+            console.log(err);
+            res.status(500).send(new ResponseDto(500, "로그인 실패"));
         }
-
-        let user;
-        try {
-            user = await axios({
-                method: "GET",
-                url: 'https://kapi.kakao.com/v2/user/me',
-                headers: {
-                    Authorization: `Bearer ${token.data.access_token}`
-                }
-            })
-        } catch (err) {
-            res.json(err.data);
-        }
-        console.log(user);
-
-        var id = user.data.id;
-        var user_name = user.data.prop.nickname;
-
-
-        const query = "INSERT INTO users(id, psword) VALUES(?, ?);";
-
-        db.query(query, [id, psword], function (err, rows, fields) {
-            if (err)
-                console.log(err);
-            else {
-                console.log(rows);
-                res.send('회원가입이 완료되었습니다.');
-            }
-        })
-
-        req.session.kakao = user.data;
-
-        res.redirect('/');
-    },
-    getinfo: (req, res) => {
-        let { nickname, profile_image } = req.session.kakao.properties
-        res.render('info.html', {
-            nickname, profile_image
-        });
-    },
-    getpage: (req, res) => {
-        res.render('index.html');
-    },
-    getKakaoUser: function (req, res) {
-        var id = req.body.id;
-        var name = req.body.nickname;
-        var email = req.body.email;
-
-        const query = "INSERT INTO users(id, name, email) VALUES(?, ?, ?);";
-
-        db.query(query, [id, name, email], function (err, rows, fields) {
-            if (err)
-                console.log(err);
-            else {
-                console.log(rows);
-                res.send('회원가입이 완료되었습니다.');
-            }
-        });
     },
 }
