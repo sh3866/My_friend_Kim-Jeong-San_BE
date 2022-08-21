@@ -22,8 +22,10 @@ module.exports = {
                     profilePhoto: req.body.profilePhoto,
                 });
                 res.status(201).send(new ResponseDto(201, "최초 로그인 성공, 계좌등록 필요"));
-            };
-            res.status(200).send(new ResponseDto(200, "로그인 성공"));
+            }
+            else {
+                res.status(200).send(new ResponseDto(200, "로그인 성공"));
+            }
         } catch(err) {
             console.log(err);
             res.status(500).send(new ResponseDto(500, "로그인 실패"));
