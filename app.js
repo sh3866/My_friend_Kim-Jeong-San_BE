@@ -6,14 +6,12 @@ const cors = require("cors");
 const userRouter = require("./routes/userRoute");
 const roomRouter = require("./routes/roomRoute");
 const paymentRouter = require("./routes/paymentRoute");
-const loginRouter = require("./routes/loginRoute");
-const registerRouter = require("./routes/registerRoute");
 
 const bodyParser = require("body-parser");
 
 dotenv.config();
 const { sequelize } = require("./models");
-const { connect } = require("./config/db");
+// const { connect } = require("./config/db");
 
 const app = express();
 app.set("port", process.env.PORT || 8001);
@@ -29,7 +27,7 @@ sequelize
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
-app.use("/register", registerRouter);
+
 app.use("/user", userRouter);
 
 
@@ -39,7 +37,6 @@ app.use(cors());
 app.use(express.json()); // json 파싱
 
 app.use("/room", roomRouter);
-// app.use("/user", userRouter);
 app.use("/payment", paymentRouter);
 
 app.use((req, res, next) => {
