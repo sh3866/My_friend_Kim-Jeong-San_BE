@@ -14,7 +14,7 @@ module.exports = class User extends Sequelize.Model {
                 },
                 accounts: {
                     type: Sequelize.JSON,
-                    allowNull: false,
+                    allowNull: true,
                 },
 
                 profilePhoto: {
