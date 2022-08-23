@@ -22,7 +22,7 @@ module.exports = {
             await Sequelize.User.findByPk(p.payerId).then((user) => {
                 let date = p.dataValues.date;
                 date = date.slice(5);
-                date = date.replace("-", "/");
+                date = date.replace("-", ".");
                 result.push({
                     payerName: user.dataValues.name,
                     date: date,
@@ -161,6 +161,46 @@ module.exports = {
     findItemSum: async function (itemId) {
         const item = await Sequelize.Item.findByPk(itemId);
         const result = item.dataValues.sum;
+        return result;
+    },
+    createPayment: async function (req, transaction) {
+        await Sequelize.Payment.create(
+            {
+                payerId: req.body.payer,
+                RoomId: req.body.roomId,
+                amount: req.body.amount,
+                group: req.body.group,
+                date: req.body.date,
+            },
+            { transaction: transaction }
+        );
+    },
+    findPaymentList: async function (roomId) {
+        const payments = await Sequelize.Payment.findAll({
+            where: { RoomId: roomId },
+        });
+        const result = [];
+        for (i = 0; i < payments.length; i++) {
+            p = payments[i];
+            let userList = [];
+            for (j = 0; j < p.group.length; j++) {
+                await Sequelize.User.findByPk(p.group[j]).then((user) => {
+                    userList.push(user.name);
+                });
+            }
+            await Sequelize.User.findByPk(p.payerId).then((user) => {
+                let date = p.dataValues.date;
+                date = date.slice(5);
+                date = date.replace("-", ".");
+                result.push({
+                    date: date,
+                    num: i + 1,
+                    amount: p.dataValues.amount,
+                    payerName: user.dataValues.name,
+                    userName: userList,
+                });
+            });
+        }
         return result;
     },
 };

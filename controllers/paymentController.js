@@ -188,4 +188,30 @@ module.exports = {
             res.status(400).send(new ResponseDto(400, "정산 결과 조회 실패"));
         }
     },
+    makePayment: async function (req, res) {
+        let transaction = await sequelize.transaction();
+        try {
+            await paymentService.createPayment(req, transaction);
+            await transaction.commit();
+            res.status(200).send(new ResponseDto(400, "정산 생성 성공"));
+        } catch (err) {
+            await transaction.rollback();
+            console.log(err);
+            res.status(400).send(new ResponseDto(200, "정산 생성 실패"));
+        }
+    },
+    getPaymentList: async function (req, res) {
+        try {
+            const roomId = req.params.roomId;
+            const paymentListResult = await paymentService.findPaymentList(
+                roomId
+            );
+            res.status(200).send(
+                new ResponseDto(200, "결제 내역 조회 성공", paymentListResult)
+            );
+        } catch (err) {
+            console.log(err);
+            res.status(400).send(new ResponseDto(400, "결제 내역 조회 실패"));
+        }
+    },
 };
