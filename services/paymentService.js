@@ -163,4 +163,16 @@ module.exports = {
         const result = item.dataValues.sum;
         return result;
     },
+    createPayment: async function (req, transaction) {
+        await Sequelize.Payment.create(
+            {
+                payerId: req.body.payer,
+                RoomId: req.body.roomId,
+                amount: req.body.amount,
+                group: req.body.group,
+                date: req.body.date,
+            },
+            { transaction: transaction }
+        );
+    },
 };
