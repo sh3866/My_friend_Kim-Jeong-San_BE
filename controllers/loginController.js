@@ -112,20 +112,31 @@ module.exports = {
     insertFriend: async(req,res) => {
         try{
             console.log(req.body);
-            const registerFriend = await Friend.findOne({
-                where: { id: req.body.data.id }
-            });
-            if (registerFriend === null) {
-                const newFriend = await Friend.create({
-                    id: req.body.data.id,
-                    name: req.body.data.profile_nickname,
-                    profilePhoto: req.body.data.profile_thumbnail_image,
-                });
-                res.status(201).send(new ResponseDto(200, "친구 등록 성공"));
+
+            if (!req.query.userId) {
+                console.log(req.params);
+                res.status(500).send(
+                    new ResponseDto(501, "유저 아이디가 없습니다")
+                );
             }
             else {
-                res.status(200).send(new ResponseDto(501, "이미 등록되어 있는 친구입니다"));
+                const registerFriend = await Friend.findOne({
+                    where: { id: req.body.data.id }
+                });
+                if (registerFriend === null) {
+                    const newFriend = await Friend.create({
+                        UserId: req.query.userId,
+                        id: req.body.data.id,
+                        name: req.body.data.profile_nickname,
+                        profilePhoto: req.body.data.profile_thumbnail_image,
+                    });
+                    res.status(201).send(new ResponseDto(200, "친구 등록 성공"));
+                }
+                else {
+                    res.status(200).send(new ResponseDto(501, "이미 등록되어 있는 친구입니다"));
+                }
             }
+            
         } catch(err) {
             console.log(err);
             res.status(500).send(new ResponseDto(500, "친구 등록 실패"));
