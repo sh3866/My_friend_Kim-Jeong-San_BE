@@ -158,7 +158,7 @@ module.exports = {
             } else {
                 return res
                     .status(200)
-                    .send(new ResponseDto(200, "스케줄 조회 성공", result));
+                    .send(new ResponseDto(200, "스케줄 조회 성공", rooms));
             }
         } catch (err) {
             console.log(err);
