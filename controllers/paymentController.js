@@ -76,9 +76,7 @@ module.exports = {
             const roomId = req.params.roomId;
             const result = {};
             try {
-                const paymentList = await paymentService.findPaymentList(
-                    roomId
-                );
+                const paymentList = await paymentService.findPayments(roomId);
                 for (i = 0; i < paymentList.length; i++) {
                     p = paymentList[i];
                     let amount = p.amount / p.group.length;

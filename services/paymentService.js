@@ -70,7 +70,7 @@ module.exports = {
             { transaction: transaction }
         );
     },
-    findPaymentList: async function (roomId) {
+    findPayments: async function (roomId) {
         const nPayments = await Sequelize.Payment.findAll({
             attributes: ["amount", "payerId", "group"],
             where: { RoomId: roomId },
@@ -201,6 +201,13 @@ module.exports = {
                 });
             });
         }
+        return result;
+    },
+    getPaymentDate: async function (roomId) {
+        const room = await Sequelize.Room.findByPk(roomId);
+        let result = room.startDate;
+        result = result.replace("-", ".");
+        result = result.replace("-", ".");
         return result;
     },
 };
