@@ -22,7 +22,7 @@ module.exports = {
             await Sequelize.User.findByPk(p.payerId).then((user) => {
                 let date = p.dataValues.date;
                 date = date.slice(5);
-                date = date.replace("-", "/");
+                date = date.replace("-", ".");
                 result.push({
                     payerName: user.dataValues.name,
                     date: date,
